@@ -1,0 +1,20 @@
+{
+  "name": "ESTGAR Studio · Cotizador",
+  "short_name": "ESTGAR Cotizador",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f8fb",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "assets/estgar-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/estgar-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

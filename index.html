@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff"><meta name="description" content="Cotizador interno de ESTGAR Studio">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/estgar-logo.png"><link rel="stylesheet" href="styles.css">
+<title>ESTGAR Studio · Cotizador</title>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand"><img src="assets/estgar-logo.png" alt="ESTGAR Studio"><div><b>ESTGAR</b><small>STUDIO</small></div></div>
+  <nav><button class="nav-item active" data-view="dashboard">⌂<span>Inicio</span></button><button class="nav-item" data-view="quote">＋<span>Nueva cotización</span></button><button class="nav-item" data-view="clients">♙<span>Clientes</span></button><button class="nav-item" data-view="history">◷<span>Historial</span></button><button class="nav-item" data-view="documents">▣<span>Documentos</span></button><button class="nav-item" data-view="settings">⚙<span>Precios</span></button></nav>
+  <div class="sidebar-foot"><span class="status-dot"></span> Sistema interno<br><small>ESTGARSTUDIO SpA</small></div>
+</aside>
+<main class="main">
+<header class="header"><div><p class="kicker">ESTGAR STUDIO · SISTEMA INTERNO</p><h1 id="viewTitle">Inicio</h1></div><button class="primary" id="headerNew">Nueva cotización <span>⌘N</span></button></header>
+<section id="dashboard" class="view active">
+  <div class="welcome"><div><span class="pill">OPERATIVO</span><h2>Hola, Ismael.</h2><p>Gestiona tus cotizaciones, servicios y clientes desde un solo lugar.</p></div><div class="today" id="today"></div></div>
+  <div class="stats"><article><span>Cotizaciones</span><strong id="statQuotes">0</strong><small>Total guardadas</small></article><article><span>Clientes</span><strong id="statClients">0</strong><small>Registrados en el dispositivo</small></article><article><span>Última cotización</span><strong id="statLast">—</strong><small id="statLastDate">Sin actividad</small></article></div>
+  <div class="dashboard-grid"><article class="card quick"><div class="card-head"><div><span class="label">ACCESO RÁPIDO</span><h3>¿Qué quieres hacer?</h3></div></div><button class="action-card" data-view="quote"><i>＋</i><div><b>Crear cotización</b><small>Configura servicios y calcula el total.</small></div><em>→</em></button><button class="action-card" data-view="history"><i>◷</i><div><b>Revisar historial</b><small>Consulta tus cotizaciones guardadas.</small></div><em>→</em></button></article>
+  <article class="card recent"><div class="card-head"><div><span class="label">ACTIVIDAD</span><h3>Cotizaciones recientes</h3></div><button class="text-btn" data-view="history">Ver todas →</button></div><div id="recentList" class="list"></div></article></div>
+</section>
+<section id="quote" class="view"><div class="quote-layout"><div class="workspace"><div class="stepbar"><span class="current">01 Cliente</span><span>02 Servicios</span><span>03 Configuración</span><span>04 Resumen</span></div>
+<article class="card"><div class="card-head"><div><span class="label">CLIENTE</span><h3>Datos del cliente</h3></div><span class="quote-id" id="quoteNumber">EST-2026-0001</span></div><div class="form-grid"><label>Nombre / empresa<input id="clientName" placeholder="Ej. Juan Pérez"></label><label>RUT<input id="clientRut" placeholder="12.345.678-9"></label><label>Teléfono<input id="clientPhone" placeholder="+56 9 ..."></label><label>Correo<input id="clientEmail" type="email" placeholder="cliente@correo.cl"></label><label class="wide">Notas del proyecto<textarea id="clientNotes" placeholder="Detalles, requerimientos u observaciones"></textarea></label></div></article>
+<article class="card"><div class="card-head"><div><span class="label">DOCUMENTO</span><h3>Tipo de documento</h3></div></div><div class="form-grid"><label>Tipo de documento<select id="documentType"><option value="cotizacion" selected>Cotización</option><option value="boleta">Boleta</option><option value="factura">Factura</option></select></label><label class="document-iva"><span>Aplicar IVA 19%</span><input id="applyIva" type="checkbox"></label></div><p class="field-help">La selección se reflejará en la cotización, el PDF y la impresión.</p></article>
+<article class="card"><div class="card-head"><div><span class="label">SERVICIOS</span><h3>Selecciona lo que necesita el cliente</h3></div></div><div id="serviceCards" class="service-grid"></div></article>
+<article class="card hidden" id="webConfig"><div class="card-head"><div><span class="label">CONFIGURACIÓN WEB</span><h3>Define el proyecto</h3></div></div><div class="web-row"><div><b>Páginas del sitio</b><small>Inicio, nosotros, servicios, contacto, etc.</small></div><div class="counter"><button id="minusPages">−</button><strong id="pageCount">1</strong><button id="plusPages">+</button></div></div><div id="webExtras" class="extras"></div></article></div>
+<aside class="quote-summary card"><div class="summary-head"><div><span class="label">RESUMEN</span><h3>Cotización <span id="summaryQuoteNumber"></span></h3></div><button class="reset" id="clearBtn">Limpiar</button></div><div id="summary" class="summary"></div>
+<div class="discount-box no-print">
+  <div><b>Descuento</b><small>Aplica un porcentaje a la cotización.</small></div>
+  <div class="discount-input"><input id="discount" type="number" min="0" max="100" step="1" value="0" inputmode="numeric"><span>%</span></div>
+</div>
+<div class="totals-breakdown">
+  <div><span>Subtotal</span><strong id="subtotal">$0</strong></div>
+  <div id="discountLine" class="discount-line"><span>Descuento</span><strong id="discountAmount">-$0</strong></div>
+</div>
+<div class="total"><span>TOTAL</span><strong id="total">$0</strong></div><div class="quote-actions"><button class="primary full" id="saveBtn">Guardar cotización</button><button class="secondary full" id="whatsappBtn">Generar PDF detallado y enviar por WhatsApp</button><button class="secondary full" id="printBtn">Imprimir</button></div><p class="note">Los precios se administran desde Precios. Configúralos una vez y el sistema los usará automáticamente.</p></aside>
+<div id="printSheet" class="print-sheet">
+  <div class="print-brand"><img src="assets/estgar-logo.png" alt="ESTGAR Studio"><div><b>ESTGARSTUDIO SpA</b><small>RUT 78.515.457-6 · Diseño Web · Programación · Producción Musical</small><small id="printCompanyContact"></small></div></div>
+  <div class="print-meta"><div><span>COTIZACIÓN</span><b id="printQuoteNumber"></b></div><div><span>FECHA</span><b id="printDate"></b></div></div>
+  <div class="print-client"><span id="printDocumentType">DOCUMENTO</span><b id="printClient"></b><small id="printClientContact"></small></div>
+  <section class="print-section"><h3>DATOS DE ESTGAR</h3><p id="printIssuerData"></p></section>
+  <section class="print-section" id="printBankSection"><h3>DATOS BANCARIOS</h3><p id="printBankData"></p></section>
+  <section class="print-section"><h3>ALCANCE DEL TRABAJO</h3><div id="printDetails"></div></section>
+  <section class="print-section" id="printNotesSection"><h3>OBSERVACIONES DEL PROYECTO</h3><p id="printNotes"></p></section>
+  <section class="print-section"><h3>DETALLE ECONÓMICO</h3><div class="print-items" id="printItems"></div></section>
+  <div class="print-totals"><div><span>Subtotal</span><b id="printSubtotal"></b></div><div id="printDiscountLine"><span>Descuento</span><b id="printDiscount"></b></div><div class="print-grand"><span>Total</span><strong id="printTotal"></strong></div></div>
+  <div class="print-footer">ESTGARSTUDIO SpA · RUT 78.515.457-6 · Paihuano, Región de Coquimbo · Esta cotización detalla el alcance seleccionado y sus valores.</div>
+</div></div></section>
+<section id="clients" class="view"><div class="section-intro"><div><span class="label">CRM SIMPLE</span><h2>Clientes</h2><p>Administra tus clientes. Usa <b>Datos</b> para modificar la ficha básica o <b>Editar completo</b> para abrir el cotizador entero con el cliente y modificar servicios, páginas, extras, descuento, documento y valores.</p></div><button class="secondary" id="newClientBtn">＋ Nuevo cliente</button></div><div class="card"><div id="clientsList" class="list"></div></div></section>
+<section id="history" class="view"><div class="section-intro"><div><span class="label">REGISTRO</span><h2>Historial</h2><p>Consulta las cotizaciones guardadas en este dispositivo.</p></div><div class="section-actions"><button class="secondary" id="historyNew">Nueva cotización</button><button class="secondary danger-outline" id="clearHistory">Borrar historial</button></div></div><div class="card"><div id="historyList" class="list"></div></div></section>
+
+<section id="documents" class="view">
+  <div class="section-intro"><div><span class="label">CENTRO DOCUMENTAL</span><h2>Documentos</h2><p>Aquí queda centralizada la documentación de ESTGAR: cotizaciones, contratos y documentos de cobro. Los datos y cláusulas son editables antes de generar el documento.</p></div><button class="primary" id="newContractBtn">＋ Nuevo contrato</button></div>
+  <div class="docs-grid">
+    <article class="card"><div class="card-head"><div><span class="label">CONTRATOS</span><h3>Contratos de prestación de servicios</h3></div></div><div id="contractsList" class="list"></div></article>
+    <article class="card"><div class="card-head"><div><span class="label">DOCUMENTOS GENERADOS</span><h3>Cotizaciones y documentos</h3></div></div><div id="documentsList" class="list"></div></article>
+  </div>
+  <article class="card contract-editor" id="contractEditorCard">
+    <div class="card-head"><div><span class="label">EDITOR DE CONTRATO</span><h3 id="contractEditorTitle">Nuevo contrato</h3></div><button class="reset" id="closeContractEditor">Cerrar</button></div>
+    <div class="form-grid">
+      <label>Cotización vinculada<select id="contractQuoteSelect"><option value="">Seleccionar cotización</option></select></label>
+      <label>Fecha del contrato<input id="contractDate" type="date"></label>
+      <label>Fecha de inicio<input id="contractStartDate" type="date"></label>
+      <label>Plazo de ejecución<input id="contractTerm" placeholder="Ej. 30 días corridos"></label>
+      <label>Forma de pago<select id="paymentMode"><option value="50-50">50% al inicio / 50% contra entrega</option><option value="100">100% al inicio</option><option value="30-70">30% al inicio / 70% contra entrega</option><option value="custom">Personalizada</option></select></label>
+      <label id="customPaymentWrap" class="hidden">Distribución personalizada<input id="customPayment" placeholder="Ej. 40% al inicio, 60% contra entrega"></label>
+      <label>Anticipo (%)<input id="advancePercent" type="number" min="0" max="100" value="50"></label>
+      <label>Saldo (%)<input id="balancePercent" type="number" min="0" max="100" value="50"></label>
+      <label class="wide">Alcance particular del contrato<textarea id="contractScope" placeholder="Describe específicamente lo que ESTGAR realizará en este proyecto."></textarea></label>
+      <label class="wide">Entregables<textarea id="contractDeliverables" placeholder="Ej. sitio publicado, archivos finales, accesos, documentación, etc."></textarea></label>
+      <label class="wide">Revisiones y cambios incluidos<textarea id="contractRevisions" placeholder="Ej. 2 rondas de ajustes dentro del alcance contratado."></textarea></label>
+      <label class="wide">Condiciones especiales<textarea id="contractSpecial" placeholder="Agrega aquí condiciones particulares acordadas con el cliente."></textarea></label>
+    </div>
+    <div class="contract-clauses">
+      <div class="contract-clause"><b>1. Objeto y alcance</b><textarea id="clause1"></textarea></div>
+      <div class="contract-clause"><b>2. Precio, impuestos y forma de pago</b><textarea id="clause2"></textarea></div>
+      <div class="contract-clause"><b>3. Plazos, entregas y aceptación</b><textarea id="clause3"></textarea></div>
+      <div class="contract-clause"><b>4. Modificaciones y prestaciones adicionales</b><textarea id="clause4"></textarea></div>
+      <div class="contract-clause"><b>5. Propiedad intelectual</b><textarea id="clause5"></textarea></div>
+      <div class="contract-clause"><b>6. Confidencialidad y datos</b><textarea id="clause6"></textarea></div>
+      <div class="contract-clause"><b>7. Incumplimiento y término anticipado</b><textarea id="clause7"></textarea></div>
+      <div class="contract-clause"><b>8. Ley aplicable y solución de controversias</b><textarea id="clause8"></textarea></div>
+      <div class="contract-clause"><b>9. Firma y ejemplares</b><textarea id="clause9"></textarea></div>
+    </div>
+    <div class="contract-totals" id="contractTotals"></div>
+    <div class="modal-actions"><button class="secondary" id="resetContractClauses">Restaurar cláusulas base</button><button class="secondary" id="saveContract">Guardar contrato</button><button class="primary" id="printContract">Generar / imprimir contrato</button></div>
+    <p class="legal-note">Modelo editable para contratación de servicios en Chile. Debe revisarse y ajustarse al caso concreto antes de su firma, especialmente cuando existan consumidores, condiciones particulares o prestaciones no estándar.</p>
+  </article>
+</section>
+<section id="settings" class="view"><div class="section-intro"><div><span class="label">CONFIGURACIÓN</span><h2>Precios y tarifas</h2><p>Modifica los valores cuando quieras. Las tarifas quedan guardadas en este dispositivo y se aplican automáticamente a las nuevas cotizaciones.</p></div></div><div class="card pricing-card"><div class="pricing-toolbar"><div><b>Tarifario ESTGAR</b><small>Valores en pesos chilenos (CLP)</small></div><button class="secondary" id="resetPrices">Restaurar valores iniciales</button></div><div id="priceEditor"></div></div>
+<div class="card pricing-card bank-card"><div class="pricing-toolbar"><div><b>Datos bancarios</b><small>Estos datos aparecerán después de los datos principales de ESTGAR en boletas/facturas.</small></div></div><div class="form-grid bank-grid"><label>Banco<input id="bankName" placeholder="Ej. BancoEstado"></label><label>Tipo de cuenta<input id="bankAccountType" placeholder="Cuenta corriente"></label><label>Número de cuenta<input id="bankAccountNumber" placeholder="Número de cuenta"></label><label>Titular<input id="bankHolder" placeholder="ESTGARSTUDIO SpA"></label><label>RUT titular<input id="bankHolderRut" placeholder="78.515.457-6"></label><label>Correo para transferencias<input id="bankTransferEmail" type="email" placeholder="estgarstudio@gmail.com"></label></div><div class="price-actions"><button class="primary" id="saveBank">Guardar datos bancarios</button><span id="bankStatus" class="price-status"></span></div></div></section>
+</main></div>
+<div id="clientModal" class="modal-backdrop hidden" aria-hidden="true">
+  <div class="client-modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+    <div class="modal-head"><div><span class="label">CLIENTE</span><h3 id="clientModalTitle">Nuevo cliente</h3></div><button class="modal-close" id="closeClientModal" aria-label="Cerrar">×</button></div>
+    <div class="form-grid">
+      <label>Nombre / empresa<input id="modalClientName" placeholder="Ej. Juan Pérez"></label>
+      <label>RUT<input id="modalClientRut" placeholder="12.345.678-9"></label>
+      <label>Teléfono<input id="modalClientPhone" placeholder="+56 9 ..."></label>
+      <label>Correo<input id="modalClientEmail" type="email" placeholder="cliente@correo.cl"></label>
+      <label class="wide">Notas<textarea id="modalClientNotes" placeholder="Información adicional del cliente"></textarea></label>
+    </div>
+    <div class="modal-actions"><button class="secondary" id="clearClientModal">Limpiar campos</button><button class="secondary" id="cancelClientModal">Cancelar</button><button class="primary" id="saveClientBtn">Guardar cliente</button></div>
+  </div>
+</div>
+<nav class="bottom-nav"><button class="active" data-view="dashboard">⌂<small>Inicio</small></button><button data-view="quote">＋<small>Cotizar</small></button><button data-view="clients">♙<small>Clientes</small></button><button data-view="history">◷<small>Historial</small></button><button data-view="documents">▣<small>Docs</small></button><button data-view="settings">⚙<small>Ajustes</small></button></nav>
+<script src="app.js"></script>
+</body></html>
